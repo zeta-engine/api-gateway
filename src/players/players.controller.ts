@@ -1,5 +1,6 @@
-import { BadRequestException, Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Observable } from 'rxjs';
 import { ClientProxySmartRanking } from 'src/proxyrmq/client-proxy';
 import { CreatePlayerDTO } from './dtos/create-player.dto';
@@ -43,6 +44,21 @@ export class PlayersController {
     } else {
       throw new BadRequestException(`Category not registered!`)
     }
+  }
+
+  @Post('/:id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(
+    @UploadedFile() file,
+    @Param('_id') _id: String
+  ) {
+    // Check if player exists
+
+    // Send file to S3 or other and receive file URL
+
+    // Update attribute from player entity
+
+    // Return player updated to client
   }
 
   @Delete('/:_id')

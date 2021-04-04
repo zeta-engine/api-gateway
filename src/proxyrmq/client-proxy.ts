@@ -12,4 +12,24 @@ export class ClientProxySmartRanking {
       }
     });
   }
+
+  getClientProxyChallengeInstance(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: ['amqp://user:user@0.0.0.0:5672'],
+        queue: 'challenges',
+      }
+    });
+  }
+
+  getClientProxyRankingsInstance(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: ['amqp://user:user@0.0.0.0:5672'],
+        queue: 'rankings',
+      }
+    });
+  }
 }
