@@ -34,6 +34,48 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    networks:
+      - mongo-compose-network
+
+  api-gateway:
+    image: api-gateway:latest
+    ports:
+      - 8080:8080
+    command: npm run start:dev
+    volumes:
+      - .:/opt/api-gateway
+    networks:
+      - mongo-compose-network
+
+  micro-admin-backend:
+    image: micro-admin-backend:latest
+    ports:
+      - 3000:3000
+    command: npm run start:dev
+    volumes:
+      - ../micro-admin-backend:/opt/micro-admin-backend
+    networks:
+      - mongo-compose-network
+
+  micro-challenges:
+    image: micro-challenges:latest
+    ports:
+      - 3001:3001
+    command: npm run start:dev
+    volumes:
+      - ../micro-challenges:/opt/micro-challenges
+    networks:
+      - mongo-compose-network
+
+  micro-rankings:
+    image: micro-rankings:latest
+    ports:
+      - 3002:3002
+    command: npm run start:dev
+    volumes:
+      - ../micro-rankings:/opt/micro-rankings
+    networks:
+      - mongo-compose-network
 
 networks: 
     mongo-compose-network:
