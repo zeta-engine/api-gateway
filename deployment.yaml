@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      imagePullSecrets:
+      - name: pipeline-docker-registry
+      containers:
+      - name: api-gateway
+        image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+        ports:
+        - containerPort: 8080
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: api-gateway-service
+spec:
+  selector:
+    app: api-gateway
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-gateway-ingress
+  annotations:
+    allow.http: "false"
+spec:
+  rules:
+  - host: api.rancher.projetozeta.com.br
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: api-gateway-service
+            servicePort: 80
